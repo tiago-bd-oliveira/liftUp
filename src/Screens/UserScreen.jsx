@@ -42,8 +42,46 @@ export default function UserScreen() {
             <IoLanguage className="mr-2 text-xl" />
             Language
           </a>
+
+          
+
+        
         </div>
+        
+        <p className="text-center text-3xl font-bold text-red-700 mb-6 pt-10">
+          Mudar
+        </p>
+
+        <div className="flex flex-col space-y-5">
+          <a
+            href="/profile"
+            className="flex items-center text-gray-700 hover:text-red-700 text-lg"
+          >
+            <BsEmojiSmile className="mr-2 text-xl" />
+            My Profile
+          </a>
+          <a
+            href="/notifications"
+            className="flex items-center text-gray-700 hover:text-red-700 text-lg"
+          >
+            <IoMdSettings className="mr-2 text-xl" />
+            General Settings
+          </a>
+          <a
+            href="/logout"
+            className="flex items-center text-gray-700 hover:text-red-700 text-lg"
+          >
+            <IoLanguage className="mr-2 text-xl" />
+            Language
+          </a>
+
+          
+
+        
+        </div>
+        
       </div>
+      
     </div>
   );
 }
