@@ -24,7 +24,7 @@ const NavButton = ({ link, Icon }) => {
 
 function Navbar() {
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white shadow-md flex justify-around items-center h-16 z-50 ">
+    <div className="fixed bottom-0 left-0 right-0 bg-white shadow-md flex justify-around items-center h-16 ">
       <NavButton Icon={IoShareSocialSharp} link={"social"} />
       <NavButton Icon={CgGym} link={""} />
       <NavButton Icon={LuComponent} link={"exercises"} />
