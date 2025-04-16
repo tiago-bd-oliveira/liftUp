@@ -9,10 +9,10 @@ export default function WorkoutScreen() {
   if (loading || !workouts) return <div>loading</div>;
 
   return (
-    <div className="flex flex-col items-center px-4 py-6 min-h-screen bg-gray-50 relative">
+    <div className="flex flex-col items-center px-4 py-6">
       <div className="text-2xl font-bold text-gray-600 mb-6">your workouts</div>
 
-      <div className="w-full max-w-md flex flex-col gap-4 mb-6">
+      <div className="w-full max-w-md flex flex-col gap-4 ">
         {workouts.map((el, index) => (
           <div key={index}>workout {index}</div>
         ))}

@@ -2,11 +2,16 @@ import AppContext from "../AppContext";
 import { useContext, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { IoIosAdd } from "react-icons/io";
+import { MdFilterAlt } from "react-icons/md";
+import ExerciseModal from "../components/ExerciseModal";
 
 const capitalize = (str) => str[0].toUpperCase() + str.slice(1, str.length);
 
-const ExerciseCard = ({ exercise }) => (
-  <div className="flex items-center bg-white rounded-xl shadow-sm overflow-hidden mb-2 p-2 w-full max-w-sm">
+const ExerciseCard = ({ exercise, onClick }) => (
+  <div
+    className="flex items-center bg-white rounded-xl shadow-sm overflow-hidden p-2 w-full max-w-sm"
+    onClick={onClick}
+  >
     <img
       src={exercise.images[0]}
       alt={exercise.name}
@@ -14,7 +19,7 @@ const ExerciseCard = ({ exercise }) => (
     />
     <div className="ml-3 flex flex-col justify-center">
       <h2 className="text-xs font-medium leading-tight">{exercise.name}</h2>
-      <div className="flex flex-wrap gap-1 mt-1">
+      <div className="flex flex-wrap pt-1">
         {exercise.primaryMuscles.map((muscle, index) => (
           <span
             key={index}
@@ -31,17 +36,19 @@ const ExerciseCard = ({ exercise }) => (
 export default function ExercisesScreen() {
   const { exercises, loading } = useContext(AppContext);
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedExercise, setSelectedExercise] = useState(null);
+
   const filteredExercises = exercises.filter((exercise) =>
-    exercise.name.toLowerCase().match(searchQuery.toLowerCase())
+    exercise.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   if (loading || exercises == null) return <div>loading</div>;
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="sticky top-0 z-10 w-full px-4 py-3 bg-gray-200">
-        <div className="flex items-center w-full max-w-md mx-auto bg-white rounded-full shadow px-4 py-2 border border-gray-300">
-          <FaSearch size={18} className="text-gray-500 mr-2" />
+    <div className="flex flex-col items-center align-middle justify-center bg-gray-200 gap-1">
+      <div className="sticky top-0 z-10 w-full px-4 py-3 bg-gray-200 border-b-2 border-gray-300">
+        <div className="flex flex-row items-center w-full max-w-md gap-x-2 bg-white rounded-full shadow px-4 py-2 border border-gray-300">
+          <FaSearch size={18} className="text-gray-500 " />
           <input
             type="text"
             placeholder="Search exercises..."
@@ -49,12 +56,24 @@ export default function ExercisesScreen() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
+          <MdFilterAlt
+            size={22}
+            className="text-gray-500"
+            onClick={() => alert("filter feature")}
+          />
         </div>
       </div>
 
-      <div className="flex flex-col items-center w-full bg-gray-200 px-4 space-y-2 flex-grow">
+      <div className="flex flex-col items-center w-full bg-gray-200 px-4 gap-2">
         {filteredExercises.map((exercise, index) => (
-          <ExerciseCard exercise={exercise} key={index} />
+          <ExerciseCard
+            exercise={exercise}
+            key={index}
+            onClick={() => {
+              setSelectedExercise(exercise);
+              console.log(exercise);
+            }}
+          />
         ))}
       </div>
 
@@ -64,6 +83,13 @@ export default function ExercisesScreen() {
           onClick={() => alert("add exercise!")}
         />
       </div>
+
+      {selectedExercise && (
+        <ExerciseModal
+          exercise={selectedExercise}
+          onClose={() => setSelectedExercise(null)}
+        />
+      )}
     </div>
   );
 }
