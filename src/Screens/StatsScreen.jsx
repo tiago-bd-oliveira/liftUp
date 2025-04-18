@@ -1,4 +1,6 @@
 import { Bar } from "react-chartjs-2";
+import React, { useCallback } from "react";
+import Model from "react-body-highlighter";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -12,6 +14,25 @@ import {
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 export default function StatsScreen() {
+
+  const musclesData = [
+    { name: "Bench Press", muscles: ["chest", "triceps", "front-deltoids"] },
+    { name: "Push Ups", muscles: ["chest"] },
+    { name: "Abs Crunch", muscles: ["abs"] },
+  ];
+
+const handleClickMuscles = useCallback(({ muscle, data }) => {
+  console.log("Muscle clicked:", muscle);
+  console.log("Data:", data);
+
+  if (!data || data.exercises.length === 0) {
+    alert(`You clicked the ${muscle}, no exercises done targeted this muscle.`);
+    return;
+  }
+
+  const exercises = data.exercises.map((exercise) => exercise).join(", ");
+  alert(`You clicked the ${muscle}! Exercises targeting this muscle: ${exercises}`);
+}, []);
 
   const sum = (array) => array.reduce((total, num) => total + num, 0);
   const workoutsPerWeek = [3, 5, 2, 3, 4, 4, 5];
@@ -65,7 +86,7 @@ export default function StatsScreen() {
 
   const handleDayClick = (day) => {
     alert(`Workout clicked for: ${day.date}`);
-    // You can add logic here to mark the workout as done or perform other actions
+    // Vai para o workout do dia 
   };
 
   const labels = getWeekStartDates(7); 
@@ -76,9 +97,9 @@ export default function StatsScreen() {
       {
         label: "no of workouts",
         data: workoutsPerWeek,
-        backgroundColor: "rgba(75, 192, 192, 0.6)",
+        backgroundColor: "rgba(240, 50, 50, 0.6)",
 
-        borderColor: "rgba(75, 192, 192, 1)",
+        borderColor: "rgba(240, 100, 100, 1)",
         borderWidth: 1,
       },
     ],
@@ -132,14 +153,36 @@ export default function StatsScreen() {
             onClick={() => handleDayClick(day)}
             className={`px-4 py-2 rounded-full ${
               day.isWorkoutDone
-                ? "bg-[rgb(78,234,240)] text-white border-2 hover:bg-[rgb(69,173,177)]"
+                ? "bg-[rgb(240,50,50)] text-white border-2 hover:bg-[rgb(245,92,92)]"
                 : "bg-transparent text-gray-700"
             }`}
           >
             {day.date}
           </button>
         ))}
-</div>
+      </div>
+      <div className="flex flex-col justify-center items-center px-4 sm:px-8">
+        <h2 className="text-2xl sm:text-3xl text-center mt-4">Muscles worked out:</h2>
+        <div className="flex flex-row justify-center items-center gap-8 mt-8">
+          <div className="flex flex-col items-center">
+            <Model
+              data={musclesData}
+              type="anterior"
+              style={{ width: "20rem", padding: "2rem" }}
+              onClick={handleClickMuscles}
+            />
+          </div>
+
+          <div className="flex flex-col items-center">
+            <Model
+              data={musclesData}
+              type="posterior" 
+              style={{ width: "20rem", padding: "2rem" }}
+              onClick={handleClickMuscles}
+            />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
