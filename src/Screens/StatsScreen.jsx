@@ -169,6 +169,12 @@ const handleClickMuscles = useCallback(({ muscle, data }) => {
               data={musclesData}
               type="anterior"
               style={{ width: "20rem", padding: "2rem" }}
+              highlightedColors={[
+                "#fdeeee", 
+                "#f7bcbc", 
+                "#f28b8b", 
+                "#e65a5a", 
+              ]}
               onClick={handleClickMuscles}
             />
           </div>
@@ -178,6 +184,12 @@ const handleClickMuscles = useCallback(({ muscle, data }) => {
               data={musclesData}
               type="posterior" 
               style={{ width: "20rem", padding: "2rem" }}
+              highlightedColors={[
+                "#fdeeee", 
+                "#f7bcbc", 
+                "#f28b8b", 
+                "#e65a5a", 
+              ]}
               onClick={handleClickMuscles}
             />
           </div>
