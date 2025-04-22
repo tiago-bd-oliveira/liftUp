@@ -4,6 +4,7 @@ import { FaSearch } from "react-icons/fa";
 import { IoIosAdd } from "react-icons/io";
 import { MdFilterAlt } from "react-icons/md";
 import ExerciseModal from "../components/ExerciseModal";
+import NewExerciseModal from "../components/NewExerciseModal";
 
 const capitalize = (str) => str[0].toUpperCase() + str.slice(1, str.length);
 
@@ -37,6 +38,8 @@ export default function ExercisesScreen() {
   const { exercises, loading } = useContext(AppContext);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedExercise, setSelectedExercise] = useState(null);
+  const [filters, setFilters] = useState([]);
+  const [addNewExercise, setAddNewExercise] = useState(false);
 
   const filteredExercises = exercises.filter((exercise) =>
     exercise.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -80,7 +83,7 @@ export default function ExercisesScreen() {
       <div className="sticky bottom-20 z-10 flex w-full justify-end pr-6">
         <IoIosAdd
           className="bg-black text-white w-10 h-10 rounded-full p-2 shadow-md hover:bg-gray-800 transition cursor-pointer"
-          onClick={() => alert("add exercise!")}
+          onClick={() => setAddNewExercise(true)}
         />
       </div>
 
@@ -89,6 +92,10 @@ export default function ExercisesScreen() {
           exercise={selectedExercise}
           onClose={() => setSelectedExercise(null)}
         />
+      )}
+
+      {addNewExercise && (
+        <NewExerciseModal onClose={() => setAddNewExercise(false)} />
       )}
     </div>
   );
