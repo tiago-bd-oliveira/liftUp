@@ -1,11 +1,24 @@
 import { BsEmojiSmile } from "react-icons/bs";
 import { IoMdSettings } from "react-icons/io";
 import { IoLanguage } from "react-icons/io5";
+import { FaQuestion } from "react-icons/fa";
+import { IoIosMail } from "react-icons/io";
+import { FaStar } from "react-icons/fa";
+import { FaPencilAlt } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 export default function UserScreen() {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("currentUser");
+    navigate("/"); // voltar ao login
+    window.location.reload(); // forçar reload para atualizar estado
+  };
+
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <div className="flex justify-center items-center mb-8">
+    <div className="min-h-screen bg-gray-100 p-6 flex flex-col items-center">
+      <div className="mb-8">
         <p
           className="text-6xl font-bold cursor-pointer text-gray-800 hover:text-gray-600 transition"
           onClick={() => alert("This is user screen")}
@@ -14,74 +27,63 @@ export default function UserScreen() {
         </p>
       </div>
 
-
-      <div className="w-full max-w-md mx-auto bg-white border border-gray-300 rounded-2xl shadow-md pt-4 pl-4 pb-4">
-        <p className="text-center text-3xl font-bold text-red-700 mb-6">
-          Settings
-        </p>
-
-        <div className="flex flex-col space-y-5">
-          <a
-            href="/profile"
-            className="flex items-center text-gray-700 hover:text-red-700 text-lg"
-          >
-            <BsEmojiSmile className="mr-2 text-xl" />
-            My Profile
-          </a>
-          <a
-            href="/notifications"
-            className="flex items-center text-gray-700 hover:text-red-700 text-lg"
-          >
-            <IoMdSettings className="mr-2 text-xl" />
-            General Settings
-          </a>
-          <a
-            href="/logout"
-            className="flex items-center text-gray-700 hover:text-red-700 text-lg"
-          >
-            <IoLanguage className="mr-2 text-xl" />
-            Language
-          </a>
-
-          
-
+      <div className="w-full max-w-md bg-white border border-gray-300 rounded-2xl shadow-md p-6 space-y-10">
         
+        {/* Settings Section */}
+        <div>
+          <p className="text-center text-3xl font-bold text-red-700 mb-6">
+            Settings
+          </p>
+          <div className="flex flex-col space-y-5">
+            <a href="/profile" className="flex items-center text-gray-700 hover:text-red-700 text-lg">
+              <BsEmojiSmile className="mr-3 text-2xl" />
+              My Profile
+            </a>
+            <a href="/settings" className="flex items-center text-gray-700 hover:text-red-700 text-lg">
+              <IoMdSettings className="mr-3 text-2xl" />
+              General Settings
+            </a>
+            <a href="/language" className="flex items-center text-gray-700 hover:text-red-700 text-lg">
+              <IoLanguage className="mr-3 text-2xl" />
+              Language
+            </a>
+          </div>
         </div>
-        
-        <p className="text-center text-3xl font-bold text-red-700 mb-6 pt-10">
-          Mudar
-        </p>
 
-        <div className="flex flex-col space-y-5">
-          <a
-            href="/profile"
-            className="flex items-center text-gray-700 hover:text-red-700 text-lg"
-          >
-            <BsEmojiSmile className="mr-2 text-xl" />
-            My Profile
-          </a>
-          <a
-            href="/notifications"
-            className="flex items-center text-gray-700 hover:text-red-700 text-lg"
-          >
-            <IoMdSettings className="mr-2 text-xl" />
-            General Settings
-          </a>
-          <a
-            href="/logout"
-            className="flex items-center text-gray-700 hover:text-red-700 text-lg"
-          >
-            <IoLanguage className="mr-2 text-xl" />
-            Language
-          </a>
-
-          
-
-        
+        {/* Help Section */}
+        <div>
+          <p className="text-center text-3xl font-bold text-red-700 mb-6">
+            Help
+          </p>
+          <div className="flex flex-col space-y-5">
+            <a href="/faq" className="flex items-center text-gray-700 hover:text-red-700 text-lg">
+              <FaQuestion className="mr-3 text-2xl" />
+              FAQ
+            </a>
+            <a href="/contact" className="flex items-center text-gray-700 hover:text-red-700 text-lg">
+              <IoIosMail className="mr-3 text-2xl" />
+              Contact Us
+            </a>
+            <a href="/rate-us" className="flex items-center text-gray-700 hover:text-red-700 text-lg">
+              <FaStar className="mr-3 text-2xl" />
+              Rate Us
+            </a>
+            <a href="/feedback" className="flex items-center text-gray-700 hover:text-red-700 text-lg">
+              <FaPencilAlt className="mr-3 text-2xl" />
+              Feedback
+            </a>
+          </div>
         </div>
-        
+        <div className="flex justify-center pt-4">
+          <button
+            onClick={handleLogout}
+            className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-6 rounded-lg shadow transition"
+          >
+            Logout
+          </button>
+        </div>
+
       </div>
-      
     </div>
   );
 }
