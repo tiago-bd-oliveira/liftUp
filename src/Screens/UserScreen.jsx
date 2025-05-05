@@ -29,7 +29,7 @@ export default function UserScreen() {
 
       <div className="w-full max-w-md bg-white border border-gray-300 rounded-2xl shadow-md p-6 space-y-10">
         
-        {/* Settings Section */}
+        
         <div>
           <p className="text-center text-3xl font-bold text-red-700 mb-6">
             Settings
