@@ -5,34 +5,7 @@ import { IoIosAdd } from "react-icons/io";
 import { MdFilterAlt } from "react-icons/md";
 import ExerciseModal from "../components/ExerciseModal";
 import NewExerciseModal from "../components/NewExerciseModal";
-
-const capitalize = (str) => str[0].toUpperCase() + str.slice(1, str.length);
-
-const ExerciseCard = ({ exercise, onClick }) => (
-  <div
-    className="flex items-center bg-white rounded-xl shadow-sm overflow-hidden p-2 w-full max-w-sm"
-    onClick={onClick}
-  >
-    <img
-      src={exercise.images[0]}
-      alt={exercise.name}
-      className="w-12 h-12 object-cover rounded-md"
-    />
-    <div className="ml-3 flex flex-col justify-center">
-      <h2 className="text-xs font-medium leading-tight">{exercise.name}</h2>
-      <div className="flex flex-wrap pt-1">
-        {exercise.primaryMuscles.map((muscle, index) => (
-          <span
-            key={index}
-            className="bg-blue-100 text-blue-800 text-xs px-2 py-0.5 rounded-full"
-          >
-            {capitalize(muscle)}
-          </span>
-        ))}
-      </div>
-    </div>
-  </div>
-);
+import ExerciseCard from "../components/ExerciseCard";
 
 export default function ExercisesScreen() {
   const { exercises, loading } = useContext(AppContext);

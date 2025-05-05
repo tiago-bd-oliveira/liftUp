@@ -35,7 +35,7 @@ const handleClickMuscles = useCallback(({ muscle, data }) => {
 }, []);
 
   const sum = (array) => array.reduce((total, num) => total + num, 0);
-  const workoutsPerWeek = [3, 5, 2, 3, 4, 4, 5];
+  const workoutsPerWeek = [3, 5, 2, 3, 4, 4, 2];
   
   const workouts = sum(workoutsPerWeek);
   const time = 45 * workouts; 
@@ -68,17 +68,17 @@ const handleClickMuscles = useCallback(({ muscle, data }) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const currentWeekStart = new Date(today);
-    currentWeekStart.setDate(today.getDate() - today.getDay()); 
-
+    currentWeekStart.setDate(today.getDate() - today.getDay());
+  
     for (let i = 0; i < 7; i++) {
       const day = new Date(currentWeekStart);
-      day.setDate(currentWeekStart.getDate() + i); 
+      day.setDate(currentWeekStart.getDate() + i);
       days.push({
-        date: day.toLocaleDateString("en-GB", { day: "numeric"}),
-        isWorkoutDone: true, 
+        date: day.toLocaleDateString("en-GB", { day: "numeric" }),
+        isWorkoutDone: i < 2, 
       });
     }
-
+  
     return days;
   };
 
@@ -163,32 +163,31 @@ const handleClickMuscles = useCallback(({ muscle, data }) => {
       </div>
       <div className="flex flex-col justify-center items-center px-4 sm:px-8">
         <h2 className="text-2xl sm:text-3xl text-center mt-4">Muscles worked out:</h2>
-        <div className="flex flex-row justify-center items-center gap-8 mt-8">
-          <div className="flex flex-col items-center">
+        <div className="flex flex-row justify-center items-center gap-8 mt-8 flex-wrap">
+          <div className="flex flex-col items-center w-full sm:w-1/2 lg:w-1/3">
             <Model
               data={musclesData}
-              type="anterior"
-              style={{ width: "20rem", padding: "2rem" }}
+              type="anterior" // Front view
+              style={{ width: "100%", maxWidth: "20rem", padding: "2rem" }}
               highlightedColors={[
-                "#fdeeee", 
-                "#f7bcbc", 
-                "#f28b8b", 
-                "#e65a5a", 
+                "#f8c1c1", 
+                "#f49797", 
+                "#f06d6d", 
+                "#e63939", 
               ]}
               onClick={handleClickMuscles}
             />
           </div>
-
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center w-full sm:w-1/2 lg:w-1/3">
             <Model
               data={musclesData}
-              type="posterior" 
-              style={{ width: "20rem", padding: "2rem" }}
+              type="posterior" // Back view
+              style={{ width: "100%", maxWidth: "20rem", padding: "2rem" }}
               highlightedColors={[
-                "#fdeeee", 
-                "#f7bcbc", 
-                "#f28b8b", 
-                "#e65a5a", 
+                "#f8c1c1", 
+                "#f49797", 
+                "#f06d6d", 
+                "#e63939",
               ]}
               onClick={handleClickMuscles}
             />
