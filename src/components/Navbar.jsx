@@ -13,7 +13,7 @@ const NavButton = ({ link, Icon }) => {
       to={link}
       className={({ isActive }) =>
         `flex items-center justify-center p-2 rounded-lg transition-colors duration-200 hover:bg-gray-100 hover:text-blue-500 ${
-          isActive ? "bg-blue-100 text-blue-600" : "text-gray-500"
+          isActive ? "bg-red-100 text-red-700" : "text-gray-500"
         }`
       }
     >

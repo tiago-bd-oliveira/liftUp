@@ -20,7 +20,7 @@ export default function WorkoutScreen() {
 
       <button
         onClick={() => setShowPopup(true)}
-        className="bg-blue-500 text-white font-semibold px-6 py-3 rounded-xl shadow-md hover:bg-blue-600 transition duration-200 cursor-pointer"
+        className="bg-red-600 text-white font-semibold px-6 py-3 rounded-xl shadow-md transition duration-200 cursor-pointer"
       >
         + New Workout
       </button>
