@@ -1,48 +1,25 @@
-import { useState, useEffect } from "react";
-import { auth, db } from "../firebase";
-import {
-  doc,
-  getDoc,
-  updateDoc,
-  collection,
-  getDocs,
-  query,
-  where,
-} from "firebase/firestore";
-import { onAuthStateChanged } from "firebase/auth";
+import { useContext, useEffect, useState } from "react";
+import { doc, getDoc, updateDoc, collection, getDocs, query, where } from "firebase/firestore";
 import { FaEdit, FaCheck, FaTimes } from "react-icons/fa";
+import { db } from "../firebase";
+import AppContext from "../AppContext";
+import { Navigate } from "react-router-dom";
 
-// Gera iniciais a partir do nome
-const getInitials = (name) => {
-  if (!name) return "";
-  const parts = name.trim().split(" ");
-  return parts.map((p) => p[0].toUpperCase()).slice(0, 2).join("");
-};
 
 export default function ProfileScreen() {
-  const [user, setUser] = useState(null);
+  const { currentUser } = useContext(AppContext);
   const [profile, setProfile] = useState({});
   const [editField, setEditField] = useState("");
 
-  // Espera pelo utilizador autenticado
+  // Redireciona se não estiver autenticado
+  if (!currentUser) {
+    return <Navigate to="/login" />;
+  }
+
+  // Carrega dados do perfil do Firestore
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-      if (firebaseUser) {
-        setUser(firebaseUser);
-      } else {
-        window.location.href = "/";
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  // Carrega dados do perfil
-  useEffect(() => {
-    if (!user) return;
-
     const fetchProfile = async () => {
-      const docRef = doc(db, "users", user.uid);
+      const docRef = doc(db, "users", currentUser.uid);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
         setProfile(docSnap.data());
@@ -50,36 +27,27 @@ export default function ProfileScreen() {
     };
 
     fetchProfile();
-  }, [user]);
+  }, [currentUser]);
 
   const handleChange = (field, value) => {
     setProfile((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleSaveField = async (field) => {
-    if (!user) return;
-
     try {
-      // Garante que displayName é único
       if (field === "displayName") {
         const usersRef = collection(db, "users");
-        const nameQuery = query(
-          usersRef,
-          where("displayName", "==", profile.displayName.trim())
-        );
+        const nameQuery = query(usersRef, where("displayName", "==", profile.displayName.trim()));
         const snapshot = await getDocs(nameQuery);
 
-        const nameTaken = snapshot.docs.some(
-          (docSnap) => docSnap.id !== user.uid
-        );
-
+        const nameTaken = snapshot.docs.some((docSnap) => docSnap.id !== currentUser.uid);
         if (nameTaken) {
           alert("Este nome já está em uso. Escolhe outro.");
           return;
         }
       }
 
-      await updateDoc(doc(db, "users", user.uid), {
+      await updateDoc(doc(db, "users", currentUser.uid), {
         [field]: profile[field],
       });
 
@@ -131,28 +99,19 @@ export default function ProfileScreen() {
     </div>
   );
 
-  if (!user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-gray-500 text-lg">A carregar perfil...</p>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center px-6 py-10">
-
       <h1 className="text-4xl font-bold text-red-700 mb-6">Perfil do Utilizador</h1>
 
       <div className="w-full max-w-md bg-white rounded-3xl shadow-xl p-6">
-      <div className="flex flex-col mb-5">
-        <label className="font-medium text-gray-600 mb-1">Nome</label>
-        <div className="bg-white border border-gray-300 rounded-xl px-4 py-2 shadow-sm text-gray-700">
-        {profile.displayName || "—"}
+        <div className="flex flex-col mb-5">
+          <label className="font-medium text-gray-600 mb-1">Nome</label>
+          <div className="bg-white border border-gray-300 rounded-xl px-4 py-2 shadow-sm text-gray-700">
+            {profile.displayName || "—"}
+          </div>
         </div>
-    </div>
 
-        {renderField("Sexo", "sexo")} 
+        {renderField("Sexo", "sexo")}
         {renderField("Idade", "idade", "number")}
         {renderField("Peso (kg)", "peso", "number")}
         {renderField("Altura (cm)", "altura", "number")}

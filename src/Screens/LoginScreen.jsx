@@ -12,12 +12,14 @@ import {
   query,
   where,
 } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
 
-export default function LoginScreen({ onLogin }) {
+export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [isRegistering, setIsRegistering] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,7 +31,7 @@ export default function LoginScreen({ onLogin }) {
 
     try {
       if (isRegistering) {
-        // 🔍 Verifica se o nome já existe
+        // Verifica se o nome já existe
         const usersRef = collection(db, "users");
         const nameQuery = query(
           usersRef,
@@ -42,37 +44,23 @@ export default function LoginScreen({ onLogin }) {
           return;
         }
 
-        // ✅ Cria a conta
+        // Cria a conta
         await createUserWithEmailAndPassword(auth, email, password);
-
-        // ⏳ Espera que o utilizador esteja autenticado
-        await new Promise((resolve) => {
-          const unsubscribe = auth.onAuthStateChanged((user) => {
-            if (user) {
-              resolve(user);
-              unsubscribe();
-            }
-          });
-        });
 
         const user = auth.currentUser;
 
-        // 💾 Guarda o nome no Firestore
+        // Guarda o nome no Firestore
         await setDoc(doc(db, "users", user.uid), {
           displayName: displayName.trim(),
           email: user.email,
         });
 
-        onLogin(user);
         alert("Conta criada com sucesso!");
+        navigate("/"); // redireciona para a home
       } else {
-        // 🔐 Login normal
-        const userCredential = await signInWithEmailAndPassword(
-          auth,
-          email,
-          password
-        );
-        onLogin(userCredential.user);
+        // Login normal
+        await signInWithEmailAndPassword(auth, email, password);
+        navigate("/"); // redireciona para a home
       }
     } catch (err) {
       console.error("Erro:", err);
