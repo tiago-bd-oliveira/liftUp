@@ -50,7 +50,8 @@ export default function ExerciseSearchModal({ onClose, onSelect }) {
               key={index}
               exercise={exercise}
               onClick={() => {
-                onSelect?.(exercise); // Callback to pass the selected exercise back
+                const new_exercise = { ...exercise, sets: [] };
+                onSelect?.(new_exercise); // Callback to pass the selected exercise back
                 onClose();
               }}
             />

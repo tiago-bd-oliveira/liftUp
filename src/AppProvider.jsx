@@ -14,10 +14,18 @@ export function AppProvider({ children }) {
   };
 
   const fetchWorkouts = () => {
-    fetch("data/workouts.json")
-      .then((res) => res.json())
-      .then((json) => setWorkouts(json))
-      .catch((err) => console.error("Failed to load JSON:", err));
+    const stored = localStorage.getItem("workouts");
+    if (stored) {
+      setWorkouts(JSON.parse(stored));
+    } else {
+      fetch("data/workouts.json")
+        .then((res) => res.json())
+        .then((json) => {
+          setWorkouts(json);
+          localStorage.setItem("workouts", JSON.stringify(json));
+        })
+        .catch((err) => console.error("Failed to load JSON:", err));
+    }
   };
 
   useEffect(() => {
@@ -27,8 +35,14 @@ export function AppProvider({ children }) {
     setLoading(false);
   }, []);
 
+  useEffect(() => {
+    if (workouts) {
+      localStorage.setItem("workouts", JSON.stringify(workouts));
+    }
+  }, [workouts]);
+
   return (
-    <AppContext.Provider value={{ exercises, loading, workouts }}>
+    <AppContext.Provider value={{ exercises, loading, workouts, setWorkouts }}>
       {children}
     </AppContext.Provider>
   );

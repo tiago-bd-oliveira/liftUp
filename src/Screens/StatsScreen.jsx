@@ -11,53 +11,63 @@ import {
   Legend,
 } from "chart.js";
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 export default function StatsScreen() {
-
   const musclesData = [
     { name: "Bench Press", muscles: ["chest", "triceps", "front-deltoids"] },
     { name: "Push Ups", muscles: ["chest"] },
     { name: "Abs Crunch", muscles: ["abs"] },
   ];
 
-const handleClickMuscles = useCallback(({ muscle, data }) => {
-  console.log("Muscle clicked:", muscle);
-  console.log("Data:", data);
+  const handleClickMuscles = useCallback(({ muscle, data }) => {
+    console.log("Muscle clicked:", muscle);
+    console.log("Data:", data);
 
-  if (!data || data.exercises.length === 0) {
-    alert(`You clicked the ${muscle}, no exercises done targeted this muscle.`);
-    return;
-  }
+    if (!data || data.exercises.length === 0) {
+      alert(
+        `You clicked the ${muscle}, no exercises done targeted this muscle.`
+      );
+      return;
+    }
 
-  const exercises = data.exercises.map((exercise) => exercise).join(", ");
-  alert(`You clicked the ${muscle}! Exercises targeting this muscle: ${exercises}`);
-}, []);
+    const exercises = data.exercises.map((exercise) => exercise).join(", ");
+    alert(
+      `You clicked the ${muscle}! Exercises targeting this muscle: ${exercises}`
+    );
+  }, []);
 
   const sum = (array) => array.reduce((total, num) => total + num, 0);
   const workoutsPerWeek = [3, 5, 2, 3, 4, 4, 2];
-  
+
   const workouts = sum(workoutsPerWeek);
-  const time = 45 * workouts; 
+  const time = 45 * workouts;
   const volume = 150 * 3 * 8 * workouts;
 
   const getWeekStartDates = (numWeeks) => {
     const dates = [];
     const today = new Date();
-    today.setHours(0, 0, 0, 0); 
+    today.setHours(0, 0, 0, 0);
     const currentWeekStart = new Date(today);
-    currentWeekStart.setDate(today.getDate() - today.getDay()); 
+    currentWeekStart.setDate(today.getDate() - today.getDay());
 
     for (let i = 0; i < numWeeks; i++) {
       const weekStart = new Date(currentWeekStart);
-      weekStart.setDate(currentWeekStart.getDate() - i * 7); 
+      weekStart.setDate(currentWeekStart.getDate() - i * 7);
 
       const formattedDate = weekStart.toLocaleDateString("en-GB", {
         month: "long",
         day: "numeric",
       });
 
-      dates.unshift(formattedDate); 
+      dates.unshift(formattedDate);
     }
 
     return dates;
@@ -69,16 +79,16 @@ const handleClickMuscles = useCallback(({ muscle, data }) => {
     today.setHours(0, 0, 0, 0);
     const currentWeekStart = new Date(today);
     currentWeekStart.setDate(today.getDate() - today.getDay());
-  
+
     for (let i = 0; i < 7; i++) {
       const day = new Date(currentWeekStart);
       day.setDate(currentWeekStart.getDate() + i);
       days.push({
         date: day.toLocaleDateString("en-GB", { day: "numeric" }),
-        isWorkoutDone: i < 2, 
+        isWorkoutDone: i < 2,
       });
     }
-  
+
     return days;
   };
 
@@ -86,10 +96,10 @@ const handleClickMuscles = useCallback(({ muscle, data }) => {
 
   const handleDayClick = (day) => {
     alert(`Workout clicked for: ${day.date}`);
-    // Vai para o workout do dia 
+    // Vai para o workout do dia
   };
 
-  const labels = getWeekStartDates(7); 
+  const labels = getWeekStartDates(7);
 
   const data = {
     labels,
@@ -120,10 +130,13 @@ const handleClickMuscles = useCallback(({ muscle, data }) => {
 
   return (
     <div className="flex flex-col justify-center items-center px-4 sm:px-8">
-      <p className="text-2xl sm:text-3xl text-center mt-4" onClick={() => alert("this is stats screen")}>
+      <p
+        className="text-2xl sm:text-3xl text-center mt-4"
+        onClick={() => alert("this is stats screen")}
+      >
         Stats
       </p>
-      <div className="flex flex-row justify-between items-center w-full sm:w-3/4 mt-4 p-4" >
+      <div className="flex flex-row justify-between items-center w-full sm:w-3/4 mt-4 p-4">
         <div className="flex flex-col text-base sm:text-lg font-semibold items-center">
           <span>Workouts</span>
           <span>{workouts}</span>
@@ -140,11 +153,17 @@ const handleClickMuscles = useCallback(({ muscle, data }) => {
       <div className="w-full sm:w-3/4 mt-8">
         <Bar data={data} options={options} />
         <div className="flex flex-col text-base sm:text-lg items-center mb-4 text-gray-500">
-          <span>Average: {(workoutsPerWeek.reduce((a, b) => a + b, 0) / workoutsPerWeek.length).toFixed(1)}</span>
+          <span>
+            Average:{" "}
+            {(
+              workoutsPerWeek.reduce((a, b) => a + b, 0) /
+              workoutsPerWeek.length
+            ).toFixed(1)}
+          </span>
         </div>
       </div>
       <div className="flex flex-col text-base sm:text-lg font-semibold items-center">
-          <span>Workouts this week:</span>
+        <span>Workouts this week:</span>
       </div>
       <div className="flex justify-between items-center w-full sm:w-3/4 mt-8">
         {weekDays.map((day, index) => (
@@ -162,19 +181,16 @@ const handleClickMuscles = useCallback(({ muscle, data }) => {
         ))}
       </div>
       <div className="flex flex-col justify-center items-center px-4 sm:px-8">
-        <h2 className="text-2xl sm:text-3xl text-center mt-4">Muscles worked out:</h2>
+        <h2 className="text-2xl sm:text-3xl text-center mt-4">
+          Muscles worked out:
+        </h2>
         <div className="flex flex-row justify-center items-center gap-8 mt-8 flex-wrap">
           <div className="flex flex-col items-center w-full sm:w-1/2 lg:w-1/3">
             <Model
               data={musclesData}
               type="anterior" // Front view
               style={{ width: "100%", maxWidth: "20rem", padding: "2rem" }}
-              highlightedColors={[
-                "#f8c1c1", 
-                "#f49797", 
-                "#f06d6d", 
-                "#e63939", 
-              ]}
+              highlightedColors={["#f8c1c1", "#f49797", "#f06d6d", "#e63939"]}
               onClick={handleClickMuscles}
             />
           </div>
@@ -183,12 +199,7 @@ const handleClickMuscles = useCallback(({ muscle, data }) => {
               data={musclesData}
               type="posterior" // Back view
               style={{ width: "100%", maxWidth: "20rem", padding: "2rem" }}
-              highlightedColors={[
-                "#f8c1c1", 
-                "#f49797", 
-                "#f06d6d", 
-                "#e63939",
-              ]}
+              highlightedColors={["#f8c1c1", "#f49797", "#f06d6d", "#e63939"]}
               onClick={handleClickMuscles}
             />
           </div>
