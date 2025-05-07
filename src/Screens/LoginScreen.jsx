@@ -3,15 +3,9 @@ import { auth, db } from "../firebase";
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  updateProfile,
 } from "firebase/auth";
-import {
-  collection,
-  getDocs,
-  doc,
-  setDoc,
-  query,
-  where,
-} from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 
 export default function LoginScreen() {
@@ -20,6 +14,15 @@ export default function LoginScreen() {
   const [displayName, setDisplayName] = useState("");
   const [isRegistering, setIsRegistering] = useState(false);
   const navigate = useNavigate();
+
+  const firebaseErrors = {
+    "auth/email-already-in-use": "Este email já está em uso.",
+    "auth/invalid-email": "O email é inválido.",
+    "auth/weak-password": "A password deve ter pelo menos 6 caracteres.",
+    "auth/user-not-found": "Utilizador não encontrado.",
+    "auth/wrong-password": "Password incorreta.",
+    "permission-denied": "Sem permissão para escrever no Firestore.",
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,40 +34,38 @@ export default function LoginScreen() {
 
     try {
       if (isRegistering) {
-        // Verifica se o nome já existe
-        const usersRef = collection(db, "users");
-        const nameQuery = query(
-          usersRef,
-          where("displayName", "==", displayName.trim())
-        );
-        const querySnapshot = await getDocs(nameQuery);
+        // 1. Criar conta
+        const cred = await createUserWithEmailAndPassword(auth, email, password);
+        console.log("Conta criada:", cred.user.uid);
 
-        if (!querySnapshot.empty) {
-          alert("Este nome de utilizador já está em uso. Escolhe outro.");
-          return;
+        // 2. Esperar que auth.currentUser esteja pronto
+        while (!auth.currentUser) {
+          await new Promise((res) => setTimeout(res, 100));
         }
-
-        // Cria a conta
-        await createUserWithEmailAndPassword(auth, email, password);
 
         const user = auth.currentUser;
 
-        // Guarda o nome no Firestore
+        // 3. Atualizar displayName
+        await updateProfile(user, {
+          displayName: displayName.trim(),
+        });
+
+        // 4. Gravar no Firestore
         await setDoc(doc(db, "users", user.uid), {
+          uid: user.uid,
           displayName: displayName.trim(),
           email: user.email,
         });
 
         alert("Conta criada com sucesso!");
-        navigate("/"); // redireciona para a home
+        navigate("/");
       } else {
-        // Login normal
         await signInWithEmailAndPassword(auth, email, password);
-        navigate("/"); // redireciona para a home
+        navigate("/");
       }
     } catch (err) {
-      console.error("Erro:", err);
-      alert("Erro: " + err.message);
+      console.error("Erro completo:", err.code, err.message);
+      alert(firebaseErrors[err.code] || "Erro: " + err.message);
     }
   };
 

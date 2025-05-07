@@ -16,6 +16,8 @@ import UserScreen from "./Screens/UserScreen";
 import LoginScreen from "./Screens/LoginScreen";
 import ProfileScreen from "./Screens/ProfileScreen";
 import WorkoutExecutionScreen from "./Screens/WorkoutExecutionScreen";
+import TestSignup from "./Screens/TestSignup";
+
 
 function AppRoutes() {
   const { currentUser } = useContext(AppContext);
@@ -37,6 +39,7 @@ function AppRoutes() {
               <Route path="user" element={<UserScreen />} />
               <Route path="profile" element={<ProfileScreen />} />
               <Route path="login" element={<Navigate to="/" />} />
+              <Route path="/test" element={<TestSignup />} />
             </Route>
 
             {/* Outside main container */}

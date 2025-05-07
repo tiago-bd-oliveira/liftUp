@@ -2,23 +2,48 @@ import { useContext, useState } from "react";
 import AppContext from "../AppContext";
 import NewWorkoutPopup from "../components/NewWorkoutPopup";
 import WorkoutCard from "../components/WorkoutCard";
+import { db } from "../firebase";
+import { addDoc, collection, deleteDoc, doc } from "firebase/firestore";
 
 export default function WorkoutScreen() {
-  const { workouts, setWorkouts, loading } = useContext(AppContext);
+  const { workouts, setWorkouts, loading, currentUser } = useContext(AppContext);
   const [showPopup, setShowPopup] = useState(false);
   const [selectedWorkout, setSelectedWorkout] = useState(null);
 
-  const saveWorkout = (workout) => {
-    setWorkouts([...workouts, workout]);
-    console.log(workouts);
+  const saveWorkout = async (workout) => {
+    if (!currentUser) return;
+
+    const newWorkout = {
+      ...workout,
+      userId: currentUser.uid,
+      timestamp: Date.now(),
+      count: 0,
+    };
+
+    try {
+      const docRef = await addDoc(collection(db, "workouts"), newWorkout);
+      setWorkouts([...workouts, { ...newWorkout, id: docRef.id }]);
+      setShowPopup(false);
+    } catch (error) {
+      console.error("Error saving workout:", error);
+    }
+  };
+
+  const deleteWorkout = async (workoutToDelete) => {
+    const confirmDelete = window.confirm(`Are you sure you want to delete "${workoutToDelete.name}"?`);
+    if (!confirmDelete) return;
+
+    try {
+      await deleteDoc(doc(db, "workouts", workoutToDelete.id));
+      const updated = workouts.filter((w) => w.id !== workoutToDelete.id);
+      setWorkouts(updated);
+    } catch (error) {
+      console.error("Error deleting workout:", error);
+    }
   };
 
   const selectWorkout = (workout) => {
-    if (workout == selectedWorkout) {
-      setSelectedWorkout(null);
-    } else {
-      setSelectedWorkout(workout);
-    }
+    setSelectedWorkout(selectedWorkout === workout ? null : workout);
   };
 
   if (loading || !workouts) return <div>loading</div>;
@@ -26,13 +51,15 @@ export default function WorkoutScreen() {
   return (
     <div className="flex flex-col items-center px-4 pb-6 pt-4 ">
       <div className="text-2xl font-bold text-black mb-6">Your Workouts</div>
+
       <div className="w-full max-w-md flex flex-col gap-4 pb-4">
         {workouts.map((workout, index) => (
           <WorkoutCard
+            key={workout.id || index}
             workout={workout}
-            key={index}
-            isSelected={selectedWorkout == workout}
+            isSelected={selectedWorkout === workout}
             onSelect={selectWorkout}
+            onDelete={() => deleteWorkout(workout)}
           />
         ))}
       </div>
@@ -43,6 +70,7 @@ export default function WorkoutScreen() {
       >
         + New Workout
       </button>
+
       {showPopup && (
         <NewWorkoutPopup
           onClose={() => setShowPopup(false)}
