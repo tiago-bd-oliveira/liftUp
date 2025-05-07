@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FaArrowLeft } from "react-icons/fa";
 import ExerciseSearchModal from "./ExerciseSearchModal";
 import ExerciseCard from "./ExerciseCard";
-import WorkoutExerciseCard from "./WorkoutExerciseCard";
+import WorkoutExerciseCard from "../components/WorkoutExerciseCard";
 
 export default function NewWorkoutPopup({ onClose, onSave }) {
   const [hasChanges, setHasChanges] = useState(false);
@@ -10,6 +10,7 @@ export default function NewWorkoutPopup({ onClose, onSave }) {
   const [workoutExercises, setWorkoutExercises] = useState([]);
   const [title, setTitle] = useState("");
   const [muscles, setMuscles] = useState("");
+  const [showWarning, setShowWarning] = useState(false);
 
   const workout = {
     name: title,
@@ -19,7 +20,7 @@ export default function NewWorkoutPopup({ onClose, onSave }) {
 
   const closeAndDiscard = () => {
     if (hasChanges) {
-      console.log("discard changes before closing");
+      setShowWarning(true);
     } else {
       onClose();
     }
@@ -27,6 +28,7 @@ export default function NewWorkoutPopup({ onClose, onSave }) {
 
   const onSelectExercise = (exercise) => {
     setWorkoutExercises([...workoutExercises, exercise]);
+    setHasChanges(true);
   };
 
   const updateExerciseSets = (indexToUpdate, newSets) => {

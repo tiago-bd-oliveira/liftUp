@@ -1,4 +1,9 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import { useContext } from "react";
 import { AppProvider } from "./AppProvider";
 import AppContext from "./AppContext";
@@ -10,6 +15,7 @@ import StatsScreen from "./Screens/StatsScreen";
 import UserScreen from "./Screens/UserScreen";
 import LoginScreen from "./Screens/LoginScreen";
 import ProfileScreen from "./Screens/ProfileScreen";
+import WorkoutExecutionScreen from "./Screens/WorkoutExecutionScreen";
 
 function AppRoutes() {
   const { currentUser } = useContext(AppContext);
@@ -18,19 +24,24 @@ function AppRoutes() {
     <Router>
       <Routes>
         {!currentUser ? (
-          <>
-            <Route path="*" element={<LoginScreen />} />
-          </>
+          // Not logged in → show login for all routes
+          <Route path="*" element={<LoginScreen />} />
         ) : (
-          <Route path="/" element={<MainContainer />}>
-            <Route index element={<WorkoutScreen />} />
-            <Route path="social" element={<SocialScreen />} />
-            <Route path="exercises" element={<ExercisesScreen />} />
-            <Route path="stats" element={<StatsScreen />} />
-            <Route path="user" element={<UserScreen />} />
-            <Route path="profile" element={<ProfileScreen />} />
-            <Route path="login" element={<Navigate to="/" />} />
-          </Route>
+          <>
+            {/* Logged in: Main container routes */}
+            <Route path="/" element={<MainContainer />}>
+              <Route index element={<WorkoutScreen />} />
+              <Route path="social" element={<SocialScreen />} />
+              <Route path="exercises" element={<ExercisesScreen />} />
+              <Route path="stats" element={<StatsScreen />} />
+              <Route path="user" element={<UserScreen />} />
+              <Route path="profile" element={<ProfileScreen />} />
+              <Route path="login" element={<Navigate to="/" />} />
+            </Route>
+
+            {/* Outside main container */}
+            <Route path="/workout" element={<WorkoutExecutionScreen />} />
+          </>
         )}
       </Routes>
     </Router>

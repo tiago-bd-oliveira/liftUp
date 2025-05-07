@@ -24,7 +24,7 @@ export default function ExercisesScreen() {
     <div className="flex flex-col items-center align-middle justify-center bg-gray-200 gap-1">
       <div className="sticky top-0 z-10 w-full px-4 py-3 bg-gray-200 border-b-2 border-gray-300">
         <div className="flex flex-row items-center w-full max-w-md gap-x-2 bg-white rounded-full shadow px-4 py-2 border border-gray-300">
-          <FaSearch size={18} className="text-gray-500 " />
+          <FaSearch size={18} className="text-gray-500" />
           <input
             type="text"
             placeholder="Search exercises..."
