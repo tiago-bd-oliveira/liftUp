@@ -180,32 +180,28 @@ export default function StatsScreen() {
           </button>
         ))}
       </div>
-      <div className="flex flex-col justify-center items-center px-4 sm:px-8">
-        <h2 className="text-2xl sm:text-3xl text-center mt-4">
-          Muscles worked out:
-        </h2>
-        <div className="flex flex-row justify-center items-center gap-8 mt-8 flex-wrap">
-          <div className="flex flex-col items-center w-full sm:w-1/2 lg:w-1/3">
-            <Model
-              data={musclesData}
-              type="anterior" // Front view
-              style={{ width: "100%", maxWidth: "20rem", padding: "2rem" }}
-              highlightedColors={["#f8c1c1", "#f49797", "#f06d6d", "#e63939"]}
-              onClick={handleClickMuscles}
-            />
-          </div>
+      <div className="flex flex-row justify-center items-center gap-8 mt-8 flex-nowrap">
+        <div className="flex flex-col items-center w-1/2">
+          <Model
+            data={musclesData}
+            type="anterior" 
+            style={{ width: "100%", maxWidth: "20rem", padding: "2rem" }}
+            highlightedColors={["#f8c1c1","#f49797","#f06d6d","#e63939",]}
+            onClick={handleClickMuscles}
+          />
+        </div>
 
-          <div className="flex flex-col items-center w-1/2">
-            <Model
-              data={musclesData}
-              type="posterior" // Back view
-              style={{ width: "100%", maxWidth: "20rem", padding: "2rem" }}
-              highlightedColors={["#f8c1c1", "#f49797", "#f06d6d", "#e63939"]}
-              onClick={handleClickMuscles}
-            />
-          </div>
+        {/* Back View */}
+        <div className="flex flex-col items-center w-1/2">
+          <Model
+            data={musclesData}
+            type="posterior"
+            style={{ width: "100%", maxWidth: "20rem", padding: "2rem" }}
+            highlightedColors={["#f8c1c1","#f49797","#f06d6d","#e63939",]}
+            onClick={handleClickMuscles}
+          />
         </div>
       </div>
-    </div>
+      </div>
   );
 }
