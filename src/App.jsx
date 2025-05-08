@@ -16,6 +16,7 @@ import UserScreen from "./Screens/UserScreen";
 import LoginScreen from "./Screens/LoginScreen";
 import ProfileScreen from "./Screens/ProfileScreen";
 import WorkoutExecutionScreen from "./Screens/WorkoutExecutionScreen";
+import EditWorkout from "./Screens/EditWorkout";
 
 
 function AppRoutes() {
@@ -42,6 +43,7 @@ function AppRoutes() {
 
             {/* Outside main container */}
             <Route path="/workout" element={<WorkoutExecutionScreen />} />
+            <Route path="/editworkout" element={<EditWorkout />} />
           </>
         )}
       </Routes>

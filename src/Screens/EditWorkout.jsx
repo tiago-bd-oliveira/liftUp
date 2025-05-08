@@ -1,8 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import AppContext from "../AppContext";
 import { FaArrowLeft } from "react-icons/fa";
 import { useNavigate, useLocation } from "react-router-dom";
 import ExerciseSearchModal from "../components/ExerciseSearchModal";
 import WorkoutExerciseCard from "../components/WorkoutExerciseCard";
+import { db } from "../firebase";
+import { addDoc, collection, setDoc, doc } from "firebase/firestore";
+
 
 export default function NewWorkoutPopup() {
   const [hasChanges, setHasChanges] = useState(false);
@@ -11,6 +15,7 @@ export default function NewWorkoutPopup() {
   const [title, setTitle] = useState("");
   const [muscles, setMuscles] = useState("");
   const [showWarning, setShowWarning] = useState(false);
+  const { workouts, setWorkouts, currentUser } = useContext(AppContext);
   const navigate = useNavigate();
   const location = useLocation();
   const { workout } = location.state || {};
@@ -22,20 +27,32 @@ export default function NewWorkoutPopup() {
       setMuscles(workout.muscles || "");
     }
   }, [workout]);
+
+  const saveWorkout = async (workout) => {
+    const updatedWorkout = {
+      ...workout,
+      userId: currentUser.uid,
+      timestamp: Date.now(),
+    };
   
-  const onSave = async () => {
     try {
-      const updatedWorkout = {
-        ...workout,
-        name: title,
-        muscles: muscles,
-        exercises: workoutExercises,
-      };
+      if (workout.id) {
+        const workoutRef = doc(db, "workouts", workout.id);
+        await setDoc(workoutRef, updatedWorkout);
+        setWorkouts((prevWorkouts) =>
+          prevWorkouts.map((w) => (w.id === workout.id ? updatedWorkout : w))
+        );
+        console.log("Workout updated successfully!");
+      } else {
+        const docRef = await addDoc(collection(db, "workouts"), {
+          ...updatedWorkout,
+          id: undefined,
+        });
+        const newWorkout = { ...updatedWorkout, id: docRef.id };
+        setWorkouts([...workouts, newWorkout]);
+        console.log("New workout created successfully!");
+      }
   
-      const workoutRef = doc(db, "workouts", workout?.id || "new-workout-id");
-      await setDoc(workoutRef, updatedWorkout);
-  
-      console.log("Workout saved successfully!");
       navigate("/");
     } catch (error) {
       console.error("Error saving workout:", error);
@@ -65,6 +82,17 @@ export default function NewWorkoutPopup() {
     setHasChanges(true);
   };
 
+  const onChangeTitle = (e) => {
+    setTitle(e.target.value);
+    setHasChanges(true); // Mark changes as made
+  };
+  
+  const onChangeMuscles = (e) => {
+    setMuscles(e.target.value);
+    setHasChanges(true); // Mark changes as made
+  };
+  
+
   return (
     <div className="fixed inset-0 z-50 bg-white flex flex-col">
       {/* Header */}
@@ -92,7 +120,7 @@ export default function NewWorkoutPopup() {
               type="text"
               value={title}
               className="w-full border border-gray-300 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={onChangeTitle}
             />
           </div>
 
@@ -104,7 +132,7 @@ export default function NewWorkoutPopup() {
               type="text"
               value={muscles}
               className="w-full border border-gray-300 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
-              onChange={(e) => setMuscles(e.target.value)}
+              onChange={onChangeMuscles}
             />
           </div>
         </div>
@@ -145,7 +173,14 @@ export default function NewWorkoutPopup() {
         </button>
         <button
           className="w-full bg-red-500 text-white py-3 rounded-xl font-medium text-lg hover:bg-green-700 transition"
-          onClick={onSave}
+          onClick={() =>
+            saveWorkout({
+              id: workout?.id, // Pass the existing workout ID if it exists
+              name: title,
+              muscles: muscles,
+              exercises: workoutExercises,
+            })
+          }
         >
           SAVE
         </button>
@@ -156,6 +191,31 @@ export default function NewWorkoutPopup() {
           onClose={() => setShowSearchExerciseModal(false)}
           onSelect={onSelectExercise}
         />
+      )}
+
+      {showWarning && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg">
+            <h2 className="text-lg font-semibold mb-4">Unsaved Changes</h2>
+            <p className="text-sm text-gray-600 mb-6">
+              You have unsaved changes. Are you sure you want to discard them?
+            </p>
+            <div className="flex gap-4">
+              <button
+                className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md"
+                onClick={() => setShowWarning(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="bg-red-500 text-white px-4 py-2 rounded-md"
+                onClick={() => navigate("/")} 
+              >
+                Discard
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

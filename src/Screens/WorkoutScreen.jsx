@@ -4,6 +4,7 @@ import NewWorkoutPopup from "../components/NewWorkoutPopup";
 import WorkoutCard from "../components/WorkoutCard";
 import { db } from "../firebase";
 import { addDoc, collection, deleteDoc, doc } from "firebase/firestore";
+import { v4 as uuidv4 } from "uuid"; 
 
 export default function WorkoutScreen() {
   const { workouts, setWorkouts, loading, currentUser } = useContext(AppContext);
@@ -15,11 +16,12 @@ export default function WorkoutScreen() {
 
     const newWorkout = {
       ...workout,
+      id: uuidv4(),
       userId: currentUser.uid,
       timestamp: Date.now(),
       count: 0,
     };
-
+  
     try {
       const docRef = await addDoc(collection(db, "workouts"), newWorkout);
       setWorkouts([...workouts, { ...newWorkout, id: docRef.id }]);
@@ -53,15 +55,15 @@ export default function WorkoutScreen() {
       <div className="text-2xl font-bold text-black mb-6">Your Workouts</div>
 
       <div className="w-full max-w-md flex flex-col gap-4 pb-4">
-        {workouts.map((workout, index) => (
-          <WorkoutCard
-            key={workout.id || index}
-            workout={workout}
-            isSelected={selectedWorkout === workout}
-            onSelect={selectWorkout}
-            onDelete={() => deleteWorkout(workout)}
-          />
-        ))}
+      {workouts.map((workout, index) => (
+        <WorkoutCard
+          key={workout.id || index} // Use the UUID as the key
+          workout={workout}
+          isSelected={selectedWorkout === workout}
+          onSelect={selectWorkout}
+          onDelete={() => deleteWorkout(workout)}
+        />
+      ))}
       </div>
 
       <button
