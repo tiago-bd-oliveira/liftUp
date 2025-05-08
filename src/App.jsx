@@ -14,7 +14,6 @@ import ExercisesScreen from "./Screens/ExercisesScreen";
 import StatsScreen from "./Screens/StatsScreen";
 import UserScreen from "./Screens/UserScreen";
 import LoginScreen from "./Screens/LoginScreen";
-import EditWorkout from "./Screens/EditWorkout";
 import ProfileScreen from "./Screens/ProfileScreen";
 import WorkoutExecutionScreen from "./Screens/WorkoutExecutionScreen";
 
@@ -39,8 +38,6 @@ function AppRoutes() {
               <Route path="user" element={<UserScreen />} />
               <Route path="profile" element={<ProfileScreen />} />
               <Route path="login" element={<Navigate to="/" />} />
-              <Route path="/editworkout" element={<EditWorkout />} />
-
             </Route>
 
             {/* Outside main container */}
