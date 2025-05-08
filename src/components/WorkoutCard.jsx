@@ -25,6 +25,10 @@ export default function WorkoutCard({ workout, isSelected, onSelect, onDelete })
     }
   };
 
+  const editWorkout = () => {
+    navigate("/editworkout", { state: { workout } });
+  }
+
   return (
     <div className="w-full max-w-md cursor-pointer select-none rounded-2xl shadow-sm border bg-white border-gray-200 flex flex-col p-4">
       <div
@@ -59,7 +63,10 @@ export default function WorkoutCard({ workout, isSelected, onSelect, onDelete })
             exit={{ height: 0, opacity: 0 }}
             className="flex flex-col sm:flex-row justify-center gap-3 w-full mt-4"
           >
-            <button className="w-full bg-red-50 text-red-600 border border-red-600 p-2 rounded-lg">
+            <button 
+              className="w-full bg-red-50 text-red-600 border border-red-600 p-2 rounded-lg"
+              onClick={editWorkout}
+            >
               EDIT
             </button>
             <button
