@@ -41,18 +41,17 @@ export default function NewWorkoutPopup({ onClose, onSave }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-white flex flex-col">
+    <div className="fixed inset-0 z-50 bg-white flex flex-col w-full">
       {/* Header */}
-      <div className="w-full flex items-center justify-center mb-4 relative px-6 pt-4">
+      <div className="w-full flex items-center justify-between mb-4 relative pt-4 px-4">
         <button
           onClick={closeAndDiscard}
-          className="absolute left-6 p-2 text-gray-700 hover:text-black transition"
+          className="text-gray-700 hover:text-black transition"
         >
           <FaArrowLeft size={24} />
         </button>
-        <h2 className="text-2xl font-semibold text-center w-full">
-          New Workout
-        </h2>
+        <h2 className="text-xl font-semibold text-center">New Workout</h2>
+        <div></div>
       </div>
 
       {/* Scrollable Content Area */}

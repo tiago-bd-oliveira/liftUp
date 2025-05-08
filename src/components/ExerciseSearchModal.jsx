@@ -14,18 +14,14 @@ export default function ExerciseSearchModal({ onClose, onSelect }) {
   if (loading || !exercises) return <div className="p-6">Loading...</div>;
 
   return (
-    <div className="fixed inset-0 z-50 bg-white flex flex-col p-6 overflow-auto">
+    <div className="fixed inset-0 z-50 bg-white flex flex-col p-4 overflow-auto">
       {/* Header */}
-      <div className="flex items-center mb-4 relative">
-        <button
-          onClick={onClose}
-          className="absolute left-0 p-2 text-gray-700 hover:text-black"
-        >
+      <div className="flex justify-between items-center mb-4 relative">
+        <button onClick={onClose} className="text-gray-700 hover:text-black">
           <FaArrowLeft size={24} />
         </button>
-        <h2 className="text-xl font-semibold text-center w-full">
-          Select Exercise
-        </h2>
+        <h2 className="text-xl font-semibold text-center ">Select Exercise</h2>
+        <div></div>
       </div>
 
       {/* Search bar */}
