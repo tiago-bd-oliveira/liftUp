@@ -3,8 +3,7 @@ import AppContext from "../AppContext";
 import NewWorkoutPopup from "../components/NewWorkoutPopup";
 import WorkoutCard from "../components/WorkoutCard";
 import { db } from "../firebase";
-import { addDoc, collection, deleteDoc, doc } from "firebase/firestore";
-import { v4 as uuidv4 } from "uuid"; 
+import { addDoc, collection, deleteDoc, doc, setDoc } from "firebase/firestore";
 
 export default function WorkoutScreen() {
   const { workouts, setWorkouts, loading, currentUser } = useContext(AppContext);
@@ -13,19 +12,22 @@ export default function WorkoutScreen() {
 
   const saveWorkout = async (workout) => {
     if (!currentUser) return;
-
-    const newWorkout = {
-      ...workout,
-      id: uuidv4(),
-      userId: currentUser.uid,
-      timestamp: Date.now(),
-      count: 0,
-    };
   
     try {
-      const docRef = await addDoc(collection(db, "workouts"), newWorkout);
-      setWorkouts([...workouts, { ...newWorkout, id: docRef.id }]);
+      const docRef = await addDoc(collection(db, "workouts"), {
+        ...workout,
+        userId: currentUser.uid,
+        timestamp: Date.now(),
+        count: 0,
+      });
+  
+      await setDoc(docRef, { id: docRef.id }, { merge: true });
+  
+      const newWorkout = { ...workout, id: docRef.id };
+      setWorkouts([...workouts, newWorkout]);
       setShowPopup(false);
+  
+      console.log("Workout saved successfully!");
     } catch (error) {
       console.error("Error saving workout:", error);
     }
