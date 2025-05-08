@@ -13,7 +13,7 @@ import {
 import AppContext from "../AppContext";
 
 export default function SocialScreen() {
-  const { workouts, currentUser } = useContext(AppContext);
+  const { workouts, currentUser, setWorkouts } = useContext(AppContext);
   const [posts, setPosts] = useState([]);
   const [showSelector, setShowSelector] = useState(false);
   const [publishing, setPublishing] = useState(false);
@@ -33,7 +33,7 @@ export default function SocialScreen() {
     fetchPosts();
   }, []);
 
-  // ✅ Publish a workout as a post, using displayName from Firestore
+  // ✅ Publish a workout as an independent post
   const publishWorkout = async (workout) => {
     if (!currentUser) return;
     setPublishing(true);
@@ -48,26 +48,17 @@ export default function SocialScreen() {
         nameToDisplay = userData.displayName || "Anonymous";
       }
 
-      const docRef = await addDoc(collection(db, "posts"), {
+      const postData = {
         userId: currentUser.uid,
         displayName: nameToDisplay,
-        workoutId: workout.id,
         workoutName: workout.name,
-        exercises: workout.exercises,
-        timestamp: Date.now(),
-      });
-
-      const newPost = {
-        id: docRef.id,
-        userId: currentUser.uid,
-        displayName: nameToDisplay,
-        workoutId: workout.id,
-        workoutName: workout.name,
-        exercises: workout.exercises,
+        exercises: [...workout.exercises], // copy data to prevent dependency
         timestamp: Date.now(),
       };
 
-      setPosts((prev) => [newPost, ...prev]);
+      const docRef = await addDoc(collection(db, "posts"), postData);
+
+      setPosts((prev) => [{ id: docRef.id, ...postData }, ...prev]);
       setShowSelector(false);
       setPublishing(false);
       alert("Workout published successfully!");
@@ -91,6 +82,30 @@ export default function SocialScreen() {
       alert("Error deleting post.");
     }
   };
+
+  const copyWorkoutToUser = async (post) => {
+    if (!currentUser) return;
+  
+    const newWorkout = {
+      name: post.workoutName,
+      exercises: [...post.exercises],
+      userId: currentUser.uid,
+      timestamp: Date.now(),
+      count: 0,
+    };
+  
+    try {
+      const docRef = await addDoc(collection(db, "workouts"), newWorkout);
+  
+      setWorkouts((prev) => [...(prev || []), { ...newWorkout, id: docRef.id }]);
+  
+      alert("Workout copied to your plans!");
+    } catch (err) {
+      console.error("Error copying workout:", err);
+      alert("Failed to copy workout.");
+    }
+  };
+  
 
   return (
     <div className="flex flex-col items-center px-4 py-6 bg-gray-50 min-h-screen">
@@ -156,6 +171,15 @@ export default function SocialScreen() {
                 title="Delete post"
               >
                 Delete
+              </button>
+            )}
+            {currentUser && currentUser.uid !== post.userId && (
+              <button
+                onClick={() => copyWorkoutToUser(post)}
+                className="absolute top-3 right-4 text-red-500 hover:text-red-700 text-sm"
+                title="Copy to my workouts"
+              >
+                Copy
               </button>
             )}
           </div>
