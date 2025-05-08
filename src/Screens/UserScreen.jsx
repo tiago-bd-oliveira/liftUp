@@ -6,14 +6,20 @@ import { IoIosMail } from "react-icons/io";
 import { FaStar } from "react-icons/fa";
 import { FaPencilAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { signOut } from "firebase/auth";
+import { auth } from "../firebase";
 
 export default function UserScreen() {
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    localStorage.removeItem("currentUser");
-    navigate("/"); // voltar ao login
-    window.location.reload(); // forçar reload para atualizar estado
+  const handleLogout = async () => {
+    try {
+      await signOut(auth); // Logout via Firebase Auth
+      navigate("/");       // Redireciona para a página inicial (login)
+    } catch (error) {
+      console.error("Erro ao fazer logout:", error);
+      alert("Erro ao fazer logout: " + error.message);
+    }
   };
 
   return (
@@ -28,8 +34,6 @@ export default function UserScreen() {
       </div>
 
       <div className="w-full max-w-md bg-white border border-gray-300 rounded-2xl shadow-md p-6 space-y-10">
-        
-        {/* Settings Section */}
         <div>
           <p className="text-center text-3xl font-bold text-red-700 mb-6">
             Settings
@@ -50,7 +54,6 @@ export default function UserScreen() {
           </div>
         </div>
 
-        {/* Help Section */}
         <div>
           <p className="text-center text-3xl font-bold text-red-700 mb-6">
             Help
@@ -74,6 +77,7 @@ export default function UserScreen() {
             </a>
           </div>
         </div>
+
         <div className="flex justify-center pt-4">
           <button
             onClick={handleLogout}
@@ -82,7 +86,6 @@ export default function UserScreen() {
             Logout
           </button>
         </div>
-
       </div>
     </div>
   );

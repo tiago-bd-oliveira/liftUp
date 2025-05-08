@@ -141,6 +141,7 @@ export default function NewExerciseModal({ onClose, onSave }) {
             <button
               type="submit"
               className="bg-blue-500 text-white px-6 py-2 rounded-md"
+              onClick={onClose}
             >
               Save Exercise
             </button>
