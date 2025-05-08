@@ -176,7 +176,7 @@ export default function SocialScreen() {
             {currentUser && currentUser.uid !== post.userId && (
               <button
                 onClick={() => copyWorkoutToUser(post)}
-                className="absolute top-3 right-4 text-blue-500 hover:text-blue-700 text-sm"
+                className="absolute top-3 right-4 text-red-500 hover:text-red-700 text-sm"
                 title="Copy to my workouts"
               >
                 Copy
