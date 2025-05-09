@@ -165,7 +165,7 @@ export default function StatsScreen() {
       <div className="flex flex-col text-base sm:text-lg font-semibold items-center">
         <span>Workouts this week:</span>
       </div>
-      <div className="flex justify-between items-center w-full sm:w-3/4 mt-8">
+      <div className="flex flex-wrap justify-between items-center w-full sm:w-3/4 mt-8">
         {weekDays.map((day, index) => (
           <button
             key={index}
@@ -184,9 +184,9 @@ export default function StatsScreen() {
         <div className="flex flex-col items-center w-1/2">
           <Model
             data={musclesData}
-            type="anterior" 
+            type="anterior"
             style={{ width: "100%", maxWidth: "20rem", padding: "2rem" }}
-            highlightedColors={["#f8c1c1","#f49797","#f06d6d","#e63939",]}
+            highlightedColors={["#f8c1c1", "#f49797", "#f06d6d", "#e63939"]}
             onClick={handleClickMuscles}
           />
         </div>
@@ -197,11 +197,11 @@ export default function StatsScreen() {
             data={musclesData}
             type="posterior"
             style={{ width: "100%", maxWidth: "20rem", padding: "2rem" }}
-            highlightedColors={["#f8c1c1","#f49797","#f06d6d","#e63939",]}
+            highlightedColors={["#f8c1c1", "#f49797", "#f06d6d", "#e63939"]}
             onClick={handleClickMuscles}
           />
         </div>
       </div>
-      </div>
+    </div>
   );
 }

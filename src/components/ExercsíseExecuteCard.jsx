@@ -40,6 +40,7 @@ export default function ExerciseExecuteCard({
         {exercise.sets.map((set, index) => (
           <SetCard
             key={index}
+            index={index}
             set={set}
             isComplete={completion[index]}
             onToggle={() => onToggle(index)}
