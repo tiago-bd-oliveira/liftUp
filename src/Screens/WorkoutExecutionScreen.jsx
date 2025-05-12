@@ -73,7 +73,7 @@ export default function WorkoutExecutionScreen() {
   );
 
   return (
-    <div className="w-full min-h-screen bg-gray-100 flex flex-col items-center pb-20">
+    <div className="w-full min-h-screen bg-gray-100 flex flex-col items-center pb-20 pt-14">
       {/* Header */}
       <div className="fixed top-0 left-0 right-0 w-full flex justify-between items-center px-3 py-2 border-b bg-white">
         <span className="text-gray-900" onClick={finishWorkout}>

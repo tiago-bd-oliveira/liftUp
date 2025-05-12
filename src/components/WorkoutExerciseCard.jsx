@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FaTrashAlt } from "react-icons/fa";
 
 export default function WorkoutExerciseCard({ exercise, index, onUpdateSets }) {
   const [sets, setSets] = useState(exercise.sets || []);
@@ -14,6 +15,12 @@ export default function WorkoutExerciseCard({ exercise, index, onUpdateSets }) {
 
   const addSet = () => {
     const updatedSets = [...sets, { weight: 0, reps: 0 }];
+    setSets(updatedSets);
+    onUpdateSets?.(index, updatedSets);
+  };
+
+  const deleteSet = (setIndex) => {
+    const updatedSets = sets.filter((_, i) => i !== setIndex);
     setSets(updatedSets);
     onUpdateSets?.(index, updatedSets);
   };
@@ -47,42 +54,51 @@ export default function WorkoutExerciseCard({ exercise, index, onUpdateSets }) {
       </div>
 
       {/* Sets */}
-      <div className="p-4 flex flex-col gap-2">
-        {sets.map((set, index) => (
+      <div className="p-4 flex flex-col items-center align-middle gap-2 w-full">
+        {sets.map((set, setIndex) => (
           <div
-            key={index}
-            className="flex items-center justify-between gap-2 px-3 py-2 border rounded-md bg-gray-50"
+            key={setIndex}
+            className="flex items-center justify-between gap-3 px-3 py-2 border rounded-md bg-gray-50 w-full"
           >
-            <span className="text-sm text-gray-700">{index + 1}</span>
+            <span className="text-sm text-gray-700">{setIndex + 1}</span>
+
             <div className="flex items-center gap-2">
               <input
                 type="number"
-                className="w-15 px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-12.5 px-2 py-1 border border-gray-300 rounded text-sm "
                 value={set.reps}
-                onChange={(e) => handleSetChange(index, "reps", e.target.value)}
+                onChange={(e) =>
+                  handleSetChange(setIndex, "reps", e.target.value)
+                }
                 placeholder="Reps"
               />
               <span className="text-sm text-gray-500">×</span>
               <input
                 type="number"
-                className="w-15 px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-12.5 px-2 py-1 border border-gray-300 rounded text-sm "
                 value={set.weight}
                 onChange={(e) =>
-                  handleSetChange(index, "weight", e.target.value)
+                  handleSetChange(setIndex, "weight", e.target.value)
                 }
                 placeholder="Weight"
               />
               <span className="text-sm text-gray-500">kg</span>
             </div>
+            <button
+              onClick={() => deleteSet(setIndex)}
+              className="text-red-500 text-xs  hover:underline"
+            >
+              <FaTrashAlt />
+            </button>
           </div>
         ))}
 
         {/* Add Set Button */}
         <button
           onClick={addSet}
-          className="mt-2 text-sm text-blue-600 hover:underline self-start"
+          className="mt-2 text-sm bg-red-500 py-1 px-2.5 text-white rounded-md font-bold"
         >
-          + Add Set
+          + NEW SET
         </button>
       </div>
     </div>

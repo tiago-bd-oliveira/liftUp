@@ -7,7 +7,6 @@ import WorkoutExerciseCard from "../components/WorkoutExerciseCard";
 import { db } from "../firebase";
 import { addDoc, collection, setDoc, doc } from "firebase/firestore";
 
-
 export default function NewWorkoutPopup() {
   const [hasChanges, setHasChanges] = useState(false);
   const [showSearchExerciseModal, setShowSearchExerciseModal] = useState(false);
@@ -34,7 +33,7 @@ export default function NewWorkoutPopup() {
       userId: currentUser.uid,
       timestamp: Date.now(),
     };
-  
+
     try {
       if (workout.id) {
         const workoutRef = doc(db, "workouts", workout.id);
@@ -52,7 +51,7 @@ export default function NewWorkoutPopup() {
         setWorkouts([...workouts, newWorkout]);
         console.log("New workout created successfully!");
       }
-  
+
       navigate("/");
     } catch (error) {
       console.error("Error saving workout:", error);
@@ -86,26 +85,26 @@ export default function NewWorkoutPopup() {
     setTitle(e.target.value);
     setHasChanges(true); // Mark changes as made
   };
-  
+
   const onChangeMuscles = (e) => {
     setMuscles(e.target.value);
     setHasChanges(true); // Mark changes as made
   };
-  
 
   return (
-    <div className="fixed inset-0 z-50 bg-white flex flex-col">
+    <div className="fixed inset-0 z-50 bg-gray-100 flex flex-col">
       {/* Header */}
-      <div className="w-full flex items-center justify-center mb-4 relative px-6 pt-4">
+      <div className="w-full flex items-center justify-around align-middle mb-4 relative px-6 py-4 bg-white border-b-gray-800 border-b-2">
         <button
           onClick={closeAndDiscard}
-          className="absolute left-6 p-2 text-gray-700 hover:text-black transition"
+          className=" p-2 text-gray-700 hover:text-black transition"
         >
           <FaArrowLeft size={24} />
         </button>
-        <h2 className="text-2xl font-semibold text-center w-full">
+        <h2 className="text-2xl font-semibold text-center w-full text-wrap">
           {title || "Edit Workout"}
         </h2>
+        <div></div>
       </div>
 
       {/* Scrollable Content Area */}
@@ -139,7 +138,9 @@ export default function NewWorkoutPopup() {
 
         {/* Exercise List */}
         <div className="flex flex-col gap-3 mb-4">
-          <h3 className="text-lg font-semibold text-gray-700">Selected Exercises:</h3>
+          <h3 className="text-lg font-semibold text-gray-700">
+            Selected Exercises:
+          </h3>
           {workoutExercises.length > 0 ? (
             workoutExercises.map((exercise, index) => (
               <WorkoutExerciseCard
@@ -209,7 +210,7 @@ export default function NewWorkoutPopup() {
               </button>
               <button
                 className="bg-red-500 text-white px-4 py-2 rounded-md"
-                onClick={() => navigate("/")} 
+                onClick={() => navigate("/")}
               >
                 Discard
               </button>

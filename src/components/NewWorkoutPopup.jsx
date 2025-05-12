@@ -110,7 +110,7 @@ export default function NewWorkoutPopup({ onClose, onSave }) {
         </div>
 
         {/* Exercise List */}
-        <div className="flex flex-col gap-3 mb-4">
+        <div className="flex flex-col gap-3 mb-4 w-full">
           {workoutExercises?.map((el, index) => (
             <WorkoutExerciseCard
               exercise={el}
