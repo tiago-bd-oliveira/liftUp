@@ -53,10 +53,7 @@ export default function WorkoutCard({
             <span className="flex items-center gap-1">
               <FaDumbbell className="inline-block" />
               {totalVolume} kg
-              <span className="ml-0.5">Total Volume</span>
-            </span>
-            <span className="text-xs text-gray-500 italic">
-              Performed {workout.count || 0} times
+              <span className="ml-0.5">total volume</span>
             </span>
           </div>
         </div>

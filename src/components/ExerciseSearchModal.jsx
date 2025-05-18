@@ -1,5 +1,6 @@
 import { useContext, useState } from "react";
 import { FaArrowLeft, FaSearch } from "react-icons/fa";
+import { MdFilterAlt } from "react-icons/md";
 import AppContext from "../AppContext";
 import ExerciseCard from "./ExerciseCard";
 
@@ -14,27 +15,37 @@ export default function ExerciseSearchModal({ onClose, onSelect }) {
   if (loading || !exercises) return <div className="p-6">Loading...</div>;
 
   return (
-    <div className="fixed inset-0 z-50 bg-white flex flex-col p-4 overflow-auto">
+    <div className="fixed inset-0 z-50 bg-gray-100 flex flex-col  overflow-auto">
       {/* Header */}
-      <div className="flex justify-between items-center mb-4 relative">
-        <button onClick={onClose} className="text-gray-700 hover:text-black">
-          <FaArrowLeft size={24} />
-        </button>
-        <h2 className="text-xl font-semibold text-center ">Select Exercise</h2>
-        <div></div>
-      </div>
+      <div className="sticky top-0 z-10 ">
+        <div className="flex justify-between items-center  relative p-3 bg-white border-b-gray-300 border-b">
+          <button onClick={onClose} className="text-gray-700 hover:text-black">
+            <FaArrowLeft size={24} />
+          </button>
+          <h2 className="text-xl font-semibold text-center">Select Exercise</h2>
+          <div></div>
+        </div>
 
-      {/* Search bar */}
-      <div className="w-full max-w-md mx-auto mb-4">
-        <div className="flex flex-row items-center w-full gap-x-2 bg-gray-100 rounded-full px-4 py-2 border border-gray-300">
-          <FaSearch size={16} className="text-gray-500" />
-          <input
-            type="text"
-            placeholder="Search exercises..."
-            className="flex-grow bg-transparent focus:outline-none text-sm"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
+        {/* Search bar with Filter button */}
+        <div className="w-full px-4 py-3 ">
+          <div className="flex items-center justify-between w-full max-w-md mx-auto rounded-full shadow px-4 py-2 border border-gray-300 bg-white">
+            <FaSearch size={18} className="text-gray-500" />
+
+            <input
+              type="text"
+              placeholder="Search exercises..."
+              className="flex-grow bg-transparent px-2 focus:outline-none text-sm"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+
+            <button
+              onClick={() => alert("filter feature")}
+              className="p-1 rounded-full transition"
+            >
+              <MdFilterAlt size={22} className="text-gray-500" />
+            </button>
+          </div>
         </div>
       </div>
 

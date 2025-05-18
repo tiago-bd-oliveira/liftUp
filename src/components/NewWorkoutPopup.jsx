@@ -56,14 +56,18 @@ export default function NewWorkoutPopup({ onClose, onSave }) {
     setHasChanges(true);
   };
 
+  const removeExercise = (indexToRemove) => {
+    setWorkoutExercises((prev) =>
+      prev.filter((_, idx) => idx !== indexToRemove)
+    );
+    setHasChanges(true);
+  };
+
   return (
     <div className="fixed inset-0 z-50 bg-white flex flex-col w-full">
       {/* Header */}
-      <div className="w-full flex items-center justify-between mb-4 relative pt-4 px-4">
-        <button
-          onClick={closeAndDiscard}
-          className="text-gray-700 hover:text-black transition"
-        >
+      <div className="w-full flex items-center justify-between mb-4 relative pt-4 px-4 ">
+        <button onClick={closeAndDiscard} className="text-gray-700">
           <FaArrowLeft size={24} />
         </button>
         <h2 className="text-xl font-semibold text-center">New Workout</h2>
@@ -81,7 +85,7 @@ export default function NewWorkoutPopup({ onClose, onSave }) {
             <input
               type="text"
               placeholder="e.g., Upper Body"
-              className="w-full border-b border-b-gray-700 px-2 py-1 text-sm "
+              className="w-full border-0 border-b-2 border-gray-400 focus:border-red-500 focus:outline-none focus:ring-0 px-2 py-1 text-sm"
               onChange={(e) => setTitle(e.target.value)}
             />
           </div>
@@ -117,29 +121,30 @@ export default function NewWorkoutPopup({ onClose, onSave }) {
               key={index}
               index={index}
               onUpdateSets={updateExerciseSets}
+              onRemoveExercise={removeExercise}
             />
           ))}
         </div>
 
         {/* + New Exercise Button */}
         <button
-          className="w-fit px-3 py-1.5 bg-red-500 text-white rounded-md text-sm hover:bg-blue-700 transition mb-8"
+          className="w-fit px-3 py-1.5 bg-red-500 text-white rounded-md text-sm mb-8 font-bold"
           onClick={() => setShowSearchExerciseModal(true)}
         >
-          + New Exercise
+          + NEW EXERCISE
         </button>
       </div>
 
       {/* Save Workout Button */}
       <div className="px-6 py-4 flex gap-2 border-t bg-white">
         <button
-          className="w-full bg-gray-200 text-gray-700 py-3 rounded-xl font-medium text-lg hover:bg-green-700 transition"
+          className="w-full bg-gray-200 text-gray-700 py-3 rounded-xl font-bold text-lg"
           onClick={closeAndDiscard}
         >
           CANCEL
         </button>
         <button
-          className="w-full bg-red-500 text-white py-3 rounded-xl font-medium text-lg hover:bg-green-700 transition"
+          className="w-full bg-red-500 text-white py-3 rounded-xl font-bold text-lg transition"
           onClick={() => {
             onSave(workout);
             onClose();
@@ -170,16 +175,16 @@ export default function NewWorkoutPopup({ onClose, onSave }) {
 
               <div className="flex justify-end gap-2">
                 <button
-                  className="px-4 py-1 text-sm bg-gray-200 rounded-md"
+                  className="px-4 py-1 text-sm bg-gray-200 text-gray-700 rounded-md font-bold"
                   onClick={() => {
                     setShowMuscleFilter(false);
                     setSelectedMuscle("");
                   }}
                 >
-                  Cancel
+                  CANCEL
                 </button>
                 <button
-                  className="px-4 py-1 text-sm bg-red-500 text-white rounded-md"
+                  className="px-4 py-1 text-sm bg-red-500 text-white rounded-md font-bold"
                   onClick={() => {
                     if (selectedMuscle && !muscles.includes(selectedMuscle)) {
                       setMuscles([...muscles, selectedMuscle]);
@@ -189,7 +194,7 @@ export default function NewWorkoutPopup({ onClose, onSave }) {
                     setShowMuscleFilter(false);
                   }}
                 >
-                  Add
+                  ADD
                 </button>
               </div>
             </div>
@@ -214,13 +219,13 @@ export default function NewWorkoutPopup({ onClose, onSave }) {
             <div className="flex justify-between gap-4">
               <button
                 onClick={onClose}
-                className="bg-red-500 text-white px-4 py-2 rounded-md font-medium hover:bg-red-600 w-full"
+                className="bg-red-500 text-white px-4 py-2 rounded-md font-bold w-full"
               >
                 QUIT
               </button>
               <button
                 onClick={() => setShowWarning(false)}
-                className="bg-gray-300 text-gray-800 px-4 py-2 rounded-md font-medium hover:bg-gray-400 w-full"
+                className="bg-gray-300 text-gray-800 px-4 py-2 rounded-md font-bold w-full fon"
               >
                 CANCEL
               </button>
