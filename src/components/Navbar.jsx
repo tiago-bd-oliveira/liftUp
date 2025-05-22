@@ -25,10 +25,10 @@ const NavButton = ({ link, Icon }) => {
 function Navbar() {
   return (
     <div className=" sticky bottom-0 h-16 bg-white shadow-md flex justify-around items-center border-t-2 border-gray-300">
-      <NavButton Icon={IoShareSocialSharp} link="social" />
-      <NavButton Icon={CgGym} link="" />
       <NavButton Icon={LuComponent} link="exercises" />
       <NavButton Icon={IoIosStats} link="stats" />
+      <NavButton Icon={CgGym} link="" />
+      <NavButton Icon={IoShareSocialSharp} link="social" />
       <NavButton Icon={FaUser} link="user" />
     </div>
   );
