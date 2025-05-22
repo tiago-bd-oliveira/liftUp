@@ -91,6 +91,13 @@ export default function NewWorkoutPopup() {
     setHasChanges(true); // Mark changes as made
   };
 
+  const removeExercise = (indexToRemove) => {
+    setWorkoutExercises((prev) =>
+      prev.filter((_, idx) => idx !== indexToRemove)
+    );
+    setHasChanges(true);
+  };
+
   return (
     <div className="fixed inset-0 z-50 bg-gray-100 flex flex-col">
       {/* Header */}
@@ -148,6 +155,7 @@ export default function NewWorkoutPopup() {
                 key={index}
                 index={index}
                 onUpdateSets={updateExerciseSets}
+                onRemoveExercise={removeExercise}
               />
             ))
           ) : (
