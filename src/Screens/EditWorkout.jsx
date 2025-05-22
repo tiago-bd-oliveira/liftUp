@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import AppContext from "../AppContext";
-import { FaArrowLeft } from "react-icons/fa";
+import { FaArrowLeft, FaPlusCircle } from "react-icons/fa";
 import { useNavigate, useLocation } from "react-router-dom";
 import ExerciseSearchModal from "../components/ExerciseSearchModal";
 import WorkoutExerciseCard from "../components/WorkoutExerciseCard";
@@ -12,18 +12,33 @@ export default function NewWorkoutPopup() {
   const [showSearchExerciseModal, setShowSearchExerciseModal] = useState(false);
   const [workoutExercises, setWorkoutExercises] = useState([]);
   const [title, setTitle] = useState("");
-  const [muscles, setMuscles] = useState("");
-  const [showWarning, setShowWarning] = useState(false);
+  const [showMuscleModal, setShowMuscleFilter] = useState(false);
+  const [selectedMuscle, setSelectedMuscle] = useState("");  const [showWarning, setShowWarning] = useState(false);
   const { workouts, setWorkouts, currentUser } = useContext(AppContext);
   const navigate = useNavigate();
   const location = useLocation();
+  const [muscles, setMuscles] = useState([]);
   const { workout } = location.state || {};
+
+  const availableMuscles = [
+    "chest",
+    "back",
+    "biceps",
+    "triceps",
+    "shoulders",
+    "glutes",
+    "calves",
+    "core",
+    "forearms",
+    "quadriceps",
+    "hamstrings",
+  ];
 
   useEffect(() => {
     if (workout) {
       setWorkoutExercises(workout.exercises || []);
       setTitle(workout.name || "");
-      setMuscles(workout.muscles || "");
+      setMuscles(workout.muscles || []);
     }
   }, [workout]);
 
@@ -86,11 +101,6 @@ export default function NewWorkoutPopup() {
     setHasChanges(true); // Mark changes as made
   };
 
-  const onChangeMuscles = (e) => {
-    setMuscles(e.target.value);
-    setHasChanges(true); // Mark changes as made
-  };
-
   const removeExercise = (indexToRemove) => {
     setWorkoutExercises((prev) =>
       prev.filter((_, idx) => idx !== indexToRemove)
@@ -131,15 +141,23 @@ export default function NewWorkoutPopup() {
           </div>
 
           <div className="flex items-center gap-2">
-            <label className="text-sm font-medium text-gray-700 whitespace-nowrap">
-              Muscles:
-            </label>
-            <input
-              type="text"
-              value={muscles}
-              className="w-full border border-gray-300 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
-              onChange={onChangeMuscles}
-            />
+            <span className="text-sm font-medium text-gray-700">Muscles:</span>
+            <div className="flex flex-wrap gap-2 mt-1">
+              {muscles.map((muscle, idx) => (
+                <span
+                  key={idx}
+                  className="bg-red-100 text-red-800 text-xs px-2 py-0.5 rounded-full"
+                >
+                  {muscle}
+                </span>
+              ))}
+            </div>
+            <button
+              className="w-4 h-4 flex items-center justify-center rounded-full text-red-600 cursor-pointer"
+              onClick={() => setShowMuscleFilter(true)}
+            >
+              <FaPlusCircle size={20} />
+            </button>
           </div>
         </div>
 
@@ -194,6 +212,54 @@ export default function NewWorkoutPopup() {
           SAVE
         </button>
       </div>
+
+      {showMuscleModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-brightness-90 px-4">
+          <div className="bg-white rounded-lg p-4 w-80 shadow-md">
+            <h3 className="text-lg font-semibold mb-2 text-gray-700">
+              Select Muscle Group
+            </h3>
+
+            <select
+              value={selectedMuscle}
+              onChange={(e) => setSelectedMuscle(e.target.value)}
+              className="w-full border border-gray-300 rounded-md px-3 py-2 mb-3 text-sm"
+            >
+              <option value="">-- Select Muscle --</option>
+              {availableMuscles.map((muscle, idx) => (
+                <option key={idx} value={muscle}>
+                  {muscle}
+                </option>
+              ))}
+            </select>
+
+            <div className="flex justify-end gap-2">
+              <button
+                className="px-4 py-1 text-sm bg-gray-200 text-gray-700 rounded-md font-bold"
+                onClick={() => {
+                  setShowMuscleFilter(false);
+                  setSelectedMuscle("");
+                }}
+              >
+                CANCEL
+              </button>
+              <button
+                className="px-4 py-1 text-sm bg-red-500 text-white rounded-md font-bold"
+                onClick={() => {
+                  if (selectedMuscle && !muscles.includes(selectedMuscle)) {
+                    setMuscles([...muscles, selectedMuscle]);
+                    setHasChanges(true);
+                  }
+                  setSelectedMuscle("");
+                  setShowMuscleFilter(false);
+                }}
+              >
+                ADD
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {showSearchExerciseModal && (
         <ExerciseSearchModal
