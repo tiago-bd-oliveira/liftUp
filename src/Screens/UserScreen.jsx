@@ -43,11 +43,11 @@ export default function UserScreen() {
               <BsEmojiSmile className="mr-3 text-2xl" />
               My Profile
             </a>
-            <a href="/settings" className="flex items-center text-gray-700 hover:text-red-700 text-lg">
+            <a className="flex items-center text-gray-700 hover:text-red-700 text-lg">
               <IoMdSettings className="mr-3 text-2xl" />
               General Settings
             </a>
-            <a href="/language" className="flex items-center text-gray-700 hover:text-red-700 text-lg">
+            <a className="flex items-center text-gray-700 hover:text-red-700 text-lg">
               <IoLanguage className="mr-3 text-2xl" />
               Language
             </a>
@@ -59,19 +59,19 @@ export default function UserScreen() {
             Help
           </p>
           <div className="flex flex-col space-y-5">
-            <a href="/faq" className="flex items-center text-gray-700 hover:text-red-700 text-lg">
+            <a className="flex items-center text-gray-700 hover:text-red-700 text-lg">
               <FaQuestion className="mr-3 text-2xl" />
               FAQ
             </a>
-            <a href="/contact" className="flex items-center text-gray-700 hover:text-red-700 text-lg">
+            <a className="flex items-center text-gray-700 hover:text-red-700 text-lg">
               <IoIosMail className="mr-3 text-2xl" />
               Contact Us
             </a>
-            <a href="/rate-us" className="flex items-center text-gray-700 hover:text-red-700 text-lg">
+            <a className="flex items-center text-gray-700 hover:text-red-700 text-lg">
               <FaStar className="mr-3 text-2xl" />
               Rate Us
             </a>
-            <a href="/feedback" className="flex items-center text-gray-700 hover:text-red-700 text-lg">
+            <a className="flex items-center text-gray-700 hover:text-red-700 text-lg">
               <FaPencilAlt className="mr-3 text-2xl" />
               Feedback
             </a>
