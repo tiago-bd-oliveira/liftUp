@@ -55,7 +55,7 @@ export default function WorkoutExecutionScreen() {
   const LogNextButton = () => (
     <button
       onClick={completeNextSet}
-      className="bg-red-500 text-white px-6 py-3 rounded-lg font-semibold"
+      className="bg-red-500 text-white px-6 py-3 rounded-lg font-semibold w-full"
       disabled={isFinished}
     >
       LOG NEXT SET
@@ -65,7 +65,7 @@ export default function WorkoutExecutionScreen() {
   const FinishWorkoutButton = () => (
     <button
       onClick={() => navigate("/")}
-      className="bg-red-500 text-white px-6 py-3 rounded-lg font-semibold"
+      className="bg-red-500 text-white px-6 py-3 rounded-lg font-semibold w-full"
       disabled={!isFinished}
     >
       FINNISH WORKOUT
